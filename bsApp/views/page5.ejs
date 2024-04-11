@@ -1,0 +1,66 @@
+<%- include partials/header.ejs %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement Page</title>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Advertisement Page</h1>
+
+        <!-- Form for adding advertisement -->
+        <form id="advertisementForm">
+            <label for="title">Title:</label><br>
+            <input type="text" id="title" name="title" required><br>
+
+            <label for="imageURL">Image URL:</label><br>
+            <input type="url" id="imageURL" name="imageURL" required><br>
+
+            <label for="description">Description:</label><br>
+            <textarea id="description" name="description" rows="4" required></textarea><br>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        <hr>
+
+        <!-- Display area for advertisements -->
+        <div id="advertisementList">
+            <!-- Advertisements will be dynamically added here -->
+        </div>
+    </div>
+    
+    <script>
+        // Function to handle form submission
+        document.getElementById("advertisementForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            // Get form values
+            var title = document.getElementById("title").value;
+            var imageURL = document.getElementById("imageURL").value;
+            var description = document.getElementById("description").value;
+
+            // Create advertisement element
+            var advertisementElement = document.createElement("div");
+            advertisementElement.innerHTML = `
+                <h2>${title}</h2>
+                <img src="${imageURL}" alt="Advertisement Image" style="max-width: 100%;">
+                <p>${description}</p>
+                <hr>
+            `;
+
+            // Append advertisement to advertisementList
+            document.getElementById("advertisementList").appendChild(advertisementElement);
+
+            // Clear form fields
+            document.getElementById("title").value = "";
+            document.getElementById("imageURL").value = "";
+            document.getElementById("description").value = "";
+        });
+    </script>
+</body>
+</html>

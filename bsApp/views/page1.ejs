@@ -1,0 +1,51 @@
+<%- include partials/header.ejs %>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Ads</title>
+</head>
+<body>
+    <script>
+        window.onload = function() {
+            if (typeof web3 !== 'undefined') {
+                web3 = new Web3(web3.currentProvider);
+            } else {
+                // Set the provider you want from Web3.providers
+                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            }
+        
+            var contractABI = []; // ABI of the smart contract
+            var contractAddress = ''; // Address of the deployed smart contract
+            var advertiseContract = new web3.eth.Contract(contractABI, contractAddress);
+        
+            const advertiseContainer = document.getElementById('advertiseContainer');
+        
+            // Function to fetch and display advertisements
+            function displayAdvertisements() {
+                advertiseContract.methods.advertCount().call()
+                .then(count => {
+                    for (let i = 1; i <= count; i++) {
+                        advertiseContract.methods.adverts(i).call()
+                        .then(ad => {
+                            const advertiseElement = document.createElement('div');
+                            advertiseElement.classList.add('advertise');
+                            advertiseElement.innerHTML = `
+                                <h3>${ad.title}</h3>
+                                <p>${ad.description}</p>
+                            `;
+                            advertiseContainer.appendChild(advertiseElement);
+                        })
+                        .catch(console.error);
+                    }
+                })
+                .catch(console.error);
+            }
+        
+            // Call the function to display advertisements when the page loads
+            displayAdvertisements();
+        }        
+    </script>
+</body>
+
+<%- include partials/footer.ejs %>
