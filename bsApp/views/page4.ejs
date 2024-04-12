@@ -1,1 +1,84 @@
 <%- include partials/header.ejs %>
+<br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Data Display</title>
+    <style>
+        #dynamicList {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 300px;
+            margin-bottom: 20px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <ul id="dynamicList">
+    </ul>
+ 
+    <script>
+        const func = async () => {
+            const url = 'https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&timePeriod=24h&tiers%5B0%5D=1&orderBy=marketCap&orderDirection=desc&limit=50&offset=0';
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Key': '8b7068f6d0mshe2595ecf881d873p19f0ddjsn99dd59d869e6',
+                    'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
+                }
+            };
+            
+            try {
+                const response = await fetch(url, options);
+                const result = await response.json();
+ 
+                function displayDynamicData() {
+                    const dynamicList = document.getElementById('dynamicList');
+                    dynamicList.innerHTML = '';
+                    
+                    const coinsArray = result.data.coins;
+                    coinsArray.forEach(item => {
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('card');
+                    
+                        const paragraph1 = document.createElement("p");
+                        paragraph1.textContent = item.name;
+                        listItem.appendChild(paragraph1);
+                    
+                        const paragraph2 = document.createElement("p");
+                        paragraph2.textContent = 'Price: ' + item.price;
+                        listItem.appendChild(paragraph2);
+                    
+                        dynamicList.appendChild(listItem);
+                    });
+                }
+                displayDynamicData();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        func()
+    </script>
+</body>
+</html>
