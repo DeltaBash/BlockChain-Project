@@ -1,4 +1,4 @@
-<%- include partials/header.ejs %>
+<% include partials/header.ejs %>
 <br>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,7 +52,7 @@
             try {
                 const response = await fetch(url, options);
                 const result = await response.json();
- 
+
                 function displayDynamicData() {
                     const dynamicList = document.getElementById('dynamicList');
                     dynamicList.innerHTML = '';

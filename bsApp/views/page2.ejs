@@ -1,92 +1,78 @@
 <%- include partials/header.ejs %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptocurrency & Blockchain</title>
+    <title>Advertise your Coin</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url('https://coincu.com/wp-content/uploads/2023/02/image-971.png'); /* Replace 'your_background_image_url.jpg' with the URL of your background image */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 20px;
-            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
         }
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 50px auto;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.7); /* Add a semi-transparent white background to the container */
-            border-radius: 8px;
-            margin-top: 100px;
-        }
-        p {
-            line-height: 1.6;
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .advertise-button {
-            background-color: #4CAF50; /* Green */
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition-duration: 0.4s;
-        }
-
-        .advertise-button:hover {
-            background-color: #45a049; /* Darker green */
-        }
-
-        .card {
-            display: none;
             background-color: #fff;
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .card.show {
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        label {
             display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-
-        input[type="text"],
-        input[type="url"],
-        textarea {
+        input[type="text"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 8px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
         }
-
-        #coinDetails {
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #details {
             margin-top: 20px;
         }
-
-        #coinDetails p {
-            margin-bottom: 5px;
-        }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Advertise your Coin</h1>
+        <label for="name">Coin Name:</label>
+        <input type="text" id="name">
+        <label for="description">Coin Description:</label>
+        <input type="text" id="description">
+        <label for="dateOfLaunch">Date of Launch:</label>
+        <input type="text" id="dateOfLaunch">
+        <button onclick="setDetails()">Submit</button>
+        <button onclick="getDetails()">View</button>
+        <div id="details"></div>
+        <div id="contractArea"></div>
+    </div>
+
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+</body>
+</html>
+
 </head>
 <body onload="connectMetamask(),connectContract()">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
@@ -100,180 +86,179 @@
             </div>
         </div>
     </div>
-    <div class="container">
-        <h2>What is Cryptocurrency?</h2>
-        <p>Cryptocurrency is a digital or virtual currency that uses cryptography for security and operates independently of a central bank. It is decentralized and typically uses blockchain technology.</p>
-        
-        <h2>What is Blockchain?</h2>
-        <p>Blockchain is a decentralized and distributed ledger technology that records transactions across multiple computers in a way that makes them tamper-proof and transparent.</p>
-        
-        <div class="button-container">
-            <button class="advertise-button" onclick="toggleCard()">Advertise Your Coin</button>
-        </div>
-
-        <div class="card" id="coinCard">
-            <h2>Advertise Your Coin</h2>
-            <form onsubmit="submitForm(event)">
-                <label for="coinName">Coin Name:</label>
-                <input type="text" id="coinName" name="coinName" required>
-                
-                <label for="coinDescription">Description:</label>
-                <textarea id="coinDescription" name="coinDescription" required></textarea>
-                
-                <label for="coinWebsite">Website Link:</label>
-                <input type="text" id="coinWebsite" name="coinWebsite" required>
-                
-                <button type="submit" onclick="n1()">Submit</button>
-            </form>
-        </div>
-        <div id="displayname"> <div>
-            
-
-        
-    </div>
 
     <script>
-        function toggleCard() {
-            var card = document.getElementById("coinCard");
-            card.classList.toggle("show");
-        }
-
-        function submitForm(event) {
-            event.preventDefault();
-            
-            var coinName = document.getElementById("coinName").value;
-            var coinDescription = document.getElementById("coinDescription").value;
-            var coinWebsite = document.getElementById("coinWebsite").value;
-
-            var coinDetailsDiv = document.getElementById("coinDetails");
-            coinDetailsDiv.innerHTML += "<p><strong>Coin Name:</strong> " + coinName + "</p>";
-            coinDetailsDiv.innerHTML += "<p><strong>Description:</strong> " + coinDescription + "</p>";
-            coinDetailsDiv.innerHTML += "<p><strong>Website Link:</strong> <a href='" + coinWebsite + "' target='_blank'>" + coinWebsite + "</a></p>";
-        }
         let account;
         const connectMetamask = async () => {
-            if(window.ethereum !== "undefined") {
-                const accounts = await ethereum.request({method: "eth_requestAccounts"});
-                account = accounts[0];
-                document.getElementById("userArea").innerHTML = `User Account: ${account}`;
-            }
+            const accounts = await ethereum.request({method: "eth_requestAccounts"});
+            account = accounts[0];
+            document.getElementById("userArea").innerHTML = `User Account: ${account}`;
         }
+
+        let contract;
 
         const connectContract = async () => {
             const ABI = [
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "b",
-                "type": "string"
-            }
-        ],
-        "name": "setDescription",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "c",
-                "type": "string"
-            }
-        ],
-        "name": "setLink",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "a",
-                "type": "string"
-            }
-        ],
-        "name": "setName",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getDescription",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "retVal",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getLink",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "retVal",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getName",
-        "outputs": [
-            {
-                "internalType": "string",
-                "name": "retVal",
-                "type": "string"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    }
-]
-          
-            ;
-            const Address = "0xd9145CCE52D386f254917e481eB44e9943F39138"; // Taking Address from Remix 
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "name",
+                            "type": "string"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "description",
+                            "type": "string"
+                        },
+                        {
+                            "indexed": false,
+                            "internalType": "string",
+                            "name": "dateOfLaunch",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "DetailsSet",
+                    "type": "event"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "string",
+                            "name": "_name",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_description",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "_dateOfLaunch",
+                            "type": "string"
+                        }
+                    ],
+                    "name": "setDetails",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "dateOfLaunch",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "description",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getDetails",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        },
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "name",
+                    "outputs": [
+                        {
+                            "internalType": "string",
+                            "name": "",
+                            "type": "string"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                }
+            ];
+            const Address = "0x0715fdaAE4f57118b309B5087bb4A534c5498D00";
             window.web3 = await new Web3(window.ethereum);
-            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            contract = new window.web3.eth.Contract(ABI, Address);
+            // Set the innerHTML of contractArea to indicate connection status
+            document.getElementById("contractArea").innerHTML = "Connected to Contract";
         }
 
+        const setDetails = () => {
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const dateOfLaunch = document.getElementById("dateOfLaunch").value;
         
-
-        const n1 = async () => {
-            const name = document.getElementById("settingname").value;
-            await window.contract.methods.setName(name).send({from: account});
+            // Check if any of the fields are empty
+            if (!name || !description || !dateOfLaunch) {
+                alert('Please fill in all fields');
+                return;
+            }
+        
+            window.ethereum.request({ method: 'eth_requestAccounts' })
+                .then((accounts) => {
+                    const account = accounts[0];
+                    return contract.methods.setDetails(name, description, dateOfLaunch).send({ from: account });
+                })
+                .then(() => {
+                    alert('Details set successfully');
+                })
+                .catch((error) => {
+                    console.error('Error setting details:', error);
+                    alert('Failed to set details');
+                });
         }
         
-        
 
-        const n2 = async () => {
-            const name = await window.contract.methods.getName().call();
-            document.getElementById("displayname").innerHTML = `Your name is: ${name}`;
-
+        const getDetails = () => {
+            contract.methods.getDetails().call()
+                .then((result) => {
+                    const name = result[0];
+                    const description = result[1];
+                    const dateOfLaunch = result[2];
+                    document.getElementById("details").innerHTML = `
+                        Name: ${name}<br>
+                        Description: ${description}<br>
+                        Date of Launch: ${dateOfLaunch}<br>
+                    `;
+                })
+                .catch((error) => {
+                    console.error('Error getting details:', error);
+                    alert('Failed to get details');
+                });
         }
-
     </script>
 </body>
-</html>
