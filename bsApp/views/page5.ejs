@@ -1,66 +1,91 @@
 <%- include partials/header.ejs %>
 
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advertisement Page</title>
-</head>
-<body>
+<html>
+   <head>
+      <title>Mining Centers Map</title>
+      <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+      <style>
+         #map {
+            width: 1000px; 
+            height: 700px; 
+            margin: 0 auto;
+         }
+         h1 {
+            text-align: center; 
+         }
+         .legend {
+            text-align: center;
+            margin-top: 20px;
+         }
+         .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+         }
+         .legend-color {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 5px;
+            border: 1px solid #333;
+         }
+      </style>
+   </head>
+   <body>
+      <h1>Mining Centers</h1> 
+      <div id="map"></div>
+      <div class="legend">
+         <div class="legend-item">
+            <div class="legend-color" style="background-color: red;"></div>
+            Sichuan Mining Center
+         </div>
+         <div class="legend-item">
+            <div class="legend-color" style="background-color: blue;"></div>
+            NYC Mining Center
+         </div>
+         <div class="legend-item">
+            <div class="legend-color" style="background-color: green;"></div>
+            London Mining Center
+         </div>
+         <div class="legend-item">
+            <div class="legend-color" style="background-color: orange;"></div>
+            San Francisco Mining Center
+         </div>
+      </div>
+      <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+      <script>
+         var map = L.map('map').setView([0, 0], 2); 
 
-    <div class="content">
-        <h1>Advertisement Page</h1>
+         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+         }).addTo(map);
 
-        <!-- Form for adding advertisement -->
-        <form id="advertisementForm">
-            <label for="title">Title:</label><br>
-            <input type="text" id="title" name="title" required><br>
+         
+         var miningCenters = [
+            {coords: [30.456, 104.075], color: 'red', name: 'Sichuan Mining Center'}, 
+            {coords: [40.7128, -74.0060], color: 'blue', name: 'NYC Mining Center'}, 
+            {coords: [51.5074, -0.1278], color: 'green', name: 'London Mining Center'}, 
+            {coords: [37.7749, -122.4194], color: 'orange', name: 'San Francisco Mining Center'} 
+         ];
 
-            <label for="imageURL">Image URL:</label><br>
-            <input type="url" id="imageURL" name="imageURL" required><br>
+         
+         for (var i = 0; i < miningCenters.length; i++) {
+            var center = miningCenters[i];
+            L.marker(center.coords, {icon: coloredIcon(center.color)})
+               .addTo(map)
+               .bindPopup(center.name); 
+         }
 
-            <label for="description">Description:</label><br>
-            <textarea id="description" name="description" rows="4" required></textarea><br>
-
-            <input type="submit" value="Submit">
-        </form>
-
-        <hr>
-
-        <!-- Display area for advertisements -->
-        <div id="advertisementList">
-            <!-- Advertisements will be dynamically added here -->
-        </div>
-    </div>
-    
-    <script>
-        // Function to handle form submission
-        document.getElementById("advertisementForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent default form submission behavior
-
-            // Get form values
-            var title = document.getElementById("title").value;
-            var imageURL = document.getElementById("imageURL").value;
-            var description = document.getElementById("description").value;
-
-            // Create advertisement element
-            var advertisementElement = document.createElement("div");
-            advertisementElement.innerHTML = `
-                <h2>${title}</h2>
-                <img src="${imageURL}" alt="Advertisement Image" style="max-width: 100%;">
-                <p>${description}</p>
-                <hr>
-            `;
-
-            // Append advertisement to advertisementList
-            document.getElementById("advertisementList").appendChild(advertisementElement);
-
-            // Clear form fields
-            document.getElementById("title").value = "";
-            document.getElementById("imageURL").value = "";
-            document.getElementById("description").value = "";
-        });
-    </script>
-</body>
+         
+         function coloredIcon(color) {
+            return new L.Icon({
+               iconUrl: 'http://leafletjs.com/examples/custom-icons/leaf-' + color + '.png', 
+               iconSize: [25, 41],
+               iconAnchor: [12, 41],
+               popupAnchor: [1, -34],
+               shadowSize: [41, 41]
+            });
+         }
+      </script>
+   </body>
 </html>
